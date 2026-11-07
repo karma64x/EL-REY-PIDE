@@ -858,7 +858,7 @@ function buildSudoku(p, host){
 }
 
 /* =====================================================================
-   TIPO: BUSCAMINAS
+   TIPO: BUSCAMINAS  (VERSIÓN CORREGIDA)
 ===================================================================== */
 function buildMines(p, host){
   const R = p.rows, C = p.cols, M = p.mines;
@@ -874,7 +874,12 @@ function buildMines(p, host){
   const msg  = $('#msg', host);
   const flagBtn = $('#flagBtn', host);
 
-  let mine = [], adj = [], rev = [], flag = [];
+  // ✅ Matrices ya creadas desde el inicio (no vacías)
+  let mine = Array.from({length:R}, ()=> Array(C).fill(false));
+  let adj  = Array.from({length:R}, ()=> Array(C).fill(0));
+  let rev  = Array.from({length:R}, ()=> Array(C).fill(false));
+  let flag = Array.from({length:R}, ()=> Array(C).fill(false));
+
   let started = false, over = false, flags = 0, revealedCount = 0, flagMode = false;
   const cells = [];
 
@@ -992,8 +997,9 @@ function buildMines(p, host){
   }
 
   function reveal(r,c){
-    if (rev[r][c] || flag[r][c]) return;
+    // ✅ Primero inicializar (si hace falta), después comprobar
     if (!started){ started = true; init(r,c); }
+    if (rev[r][c] || flag[r][c]) return;
 
     if (mine[r][c]){
       rev[r][c] = true;
@@ -1023,8 +1029,9 @@ function buildMines(p, host){
     if (over || state.resolved) return;
 
     if (flagMode){
-      if (rev[r][c]) return;
+      // ✅ Primero inicializar (si hace falta), después comprobar
       if (!started){ started = true; init(Math.floor(R/2), Math.floor(C/2)); }
+      if (rev[r][c]) return;
       flag[r][c] = !flag[r][c];
       flags += flag[r][c] ? 1 : -1;
       paint(r,c);
