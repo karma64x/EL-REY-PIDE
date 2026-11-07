@@ -425,16 +425,16 @@ const STAGE1 = [
     answer:2,
     next:'32'
   },
-  /* 8 — nonograma 5x5 (CRUZ — dificultad baja) */
+  /* 8 — nonograma 5x5 (dificultad media) */
   {
     title:'ACERTIJO 08',
     type:'nonogram',
     solution:[
-      [0,0,1,0,0],
-      [0,0,1,0,0],
-      [1,1,1,1,1],
-      [0,0,1,0,0],
-      [0,0,1,0,0]
+      [0,1,1,0,0],
+      [1,1,0,0,0],
+      [0,1,1,1,0],
+      [0,0,0,1,1],
+      [0,1,1,1,0]
     ],
     stageEnd:true
   }
@@ -458,16 +458,16 @@ const STAGE2 = [
     answer:1,
     next:'11'
   },
-  /* 3 — nonograma 7x7 (ROMBO — dificultad baja) */
+  /* 3 — nonograma 7x7 (dificultad media) */
   {
     title:'ACERTIJO 03',
     type:'nonogram',
     solution:[
-      [0,0,0,1,0,0,0],
       [0,0,1,1,1,0,0],
-      [0,1,1,1,1,1,0],
-      [1,1,1,1,1,1,1],
-      [0,1,1,1,1,1,0],
+      [0,1,1,0,1,1,0],
+      [1,1,0,1,0,1,1],
+      [1,1,0,1,0,1,1],
+      [0,1,1,0,1,1,0],
       [0,0,1,1,1,0,0],
       [0,0,0,1,0,0,0]
     ],
@@ -548,19 +548,6 @@ const state = { player:null, stage:0, index:0, resolved:false };
 
 function getPuzzle(){ return STAGES[state.stage][state.index]; }
 
-function saveProgress(){
-  try{
-    localStorage.setItem('rey_'+state.player, JSON.stringify({stage:state.stage,index:state.index}));
-  }catch(e){}
-}
-function loadProgress(){
-  try{
-    const d = JSON.parse(localStorage.getItem('rey_'+state.player));
-    if (d && typeof d.stage==='number' && typeof d.index==='number') return d;
-  }catch(e){}
-  return null;
-}
-
 /* =====================================================================
    PANTALLA: LOGIN
 ===================================================================== */
@@ -590,14 +577,11 @@ function renderLogin(){
     if (!num || num < 1){ err.textContent = 'NÚMERO INVÁLIDO'; return; }
     if (pass !== PWD_LOGIN){ err.textContent = 'CONTRASEÑA INCORRECTA'; return; }
     state.player = num;
-    const prog = loadProgress();
-    if (prog){
-      state.stage = Math.min(prog.stage, STAGES.length-1);
-      state.index = prog.index;
-      if (state.index >= STAGES[state.stage].length) state.index = 0;
-    } else {
-      state.stage = 0; state.index = 0;
-    }
+    // Siempre se empieza desde el primer acertijo.
+    // Se limpia cualquier progreso guardado previamente para este número.
+    try{ localStorage.removeItem('rey_'+num); }catch(e){}
+    state.stage = 0;
+    state.index = 0;
     renderPuzzle();
   };
 
@@ -689,7 +673,6 @@ function showNext(p){
     const v = (inp.value||'').trim().toUpperCase();
     if (v === String(p.next).toUpperCase()){
       state.index++;
-      saveProgress();
       renderPuzzle();
     } else {
       $('#nextErr').textContent = 'CONTRASEÑA INCORRECTA';
@@ -877,7 +860,6 @@ function buildMines(p, host){
   const msg  = $('#msg', host);
   const flagBtn = $('#flagBtn', host);
 
-  // Matrices ya creadas desde el inicio
   let mine = Array.from({length:R}, ()=> Array(C).fill(false));
   let adj  = Array.from({length:R}, ()=> Array(C).fill(0));
   let rev  = Array.from({length:R}, ()=> Array(C).fill(false));
@@ -921,7 +903,6 @@ function buildMines(p, host){
       mine[r][c] = true;
       placed++;
     }
-    // relleno de seguridad
     let i = 0;
     while (placed < M && i < R*C){
       const r = Math.floor(i/C), c = i%C;
@@ -1404,7 +1385,6 @@ function renderStageMenu(){
     if (v === '1'){
       state.stage = 1;
       state.index = 0;
-      saveProgress();
       renderPuzzle();
     } else {
       $('#merr').textContent = 'CONTRASEÑA INCORRECTA';
@@ -1436,7 +1416,6 @@ function renderEnd(){
     </div>`;
 
   $('#again').onclick = ()=>{
-    try{ localStorage.removeItem('rey_'+state.player); }catch(e){}
     state.player = null; state.stage = 0; state.index = 0;
     renderLogin();
   };
