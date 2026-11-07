@@ -221,8 +221,11 @@ label{
 .ncell{
   background:#17171e;border:1px solid #22222b;border-radius:0;padding:0;
   font-family:inherit;-webkit-appearance:none;appearance:none;
+  transition:background .15s,border-color .15s;
 }
 .ncell.fill{background:#e9e9ec;border-color:#e9e9ec;}
+.ncell.fill.ok{background:#2fbf71;border-color:#2fbf71;}
+.ncell.fill.bad{background:#e03131;border-color:#e03131;}
 
 /* ---------- domino ---------- */
 .chain,.pool{
@@ -422,16 +425,16 @@ const STAGE1 = [
     answer:2,
     next:'32'
   },
-  /* 8 — nonograma 5x5 */
+  /* 8 — nonograma 5x5 (CRUZ — dificultad baja) */
   {
     title:'ACERTIJO 08',
     type:'nonogram',
     solution:[
       [0,0,1,0,0],
-      [0,1,1,1,0],
+      [0,0,1,0,0],
       [1,1,1,1,1],
       [0,0,1,0,0],
-      [0,1,0,1,0]
+      [0,0,1,0,0]
     ],
     stageEnd:true
   }
@@ -455,16 +458,16 @@ const STAGE2 = [
     answer:1,
     next:'11'
   },
-  /* 3 — nonograma 7x7 */
+  /* 3 — nonograma 7x7 (ROMBO — dificultad baja) */
   {
     title:'ACERTIJO 03',
     type:'nonogram',
     solution:[
+      [0,0,0,1,0,0,0],
       [0,0,1,1,1,0,0],
-      [0,1,1,0,1,1,0],
-      [1,1,0,0,0,1,1],
-      [1,1,0,0,0,1,1],
-      [0,1,1,0,1,1,0],
+      [0,1,1,1,1,1,0],
+      [1,1,1,1,1,1,1],
+      [0,1,1,1,1,1,0],
       [0,0,1,1,1,0,0],
       [0,0,0,1,0,0,0]
     ],
@@ -858,7 +861,7 @@ function buildSudoku(p, host){
 }
 
 /* =====================================================================
-   TIPO: BUSCAMINAS  (VERSIÓN CORREGIDA)
+   TIPO: BUSCAMINAS
 ===================================================================== */
 function buildMines(p, host){
   const R = p.rows, C = p.cols, M = p.mines;
@@ -874,7 +877,7 @@ function buildMines(p, host){
   const msg  = $('#msg', host);
   const flagBtn = $('#flagBtn', host);
 
-  // ✅ Matrices ya creadas desde el inicio (no vacías)
+  // Matrices ya creadas desde el inicio
   let mine = Array.from({length:R}, ()=> Array(C).fill(false));
   let adj  = Array.from({length:R}, ()=> Array(C).fill(0));
   let rev  = Array.from({length:R}, ()=> Array(C).fill(false));
@@ -997,7 +1000,6 @@ function buildMines(p, host){
   }
 
   function reveal(r,c){
-    // ✅ Primero inicializar (si hace falta), después comprobar
     if (!started){ started = true; init(r,c); }
     if (rev[r][c] || flag[r][c]) return;
 
@@ -1029,7 +1031,6 @@ function buildMines(p, host){
     if (over || state.resolved) return;
 
     if (flagMode){
-      // ✅ Primero inicializar (si hace falta), después comprobar
       if (!started){ started = true; init(Math.floor(R/2), Math.floor(C/2)); }
       if (rev[r][c]) return;
       flag[r][c] = !flag[r][c];
@@ -1049,7 +1050,7 @@ function buildMines(p, host){
 }
 
 /* =====================================================================
-   TIPO: NONOGRAMA
+   TIPO: NONOGRAMA (con feedback verde/rojo en las verificaciones)
 ===================================================================== */
 function lineClue(arr){
   const res = [];
@@ -1068,7 +1069,10 @@ function buildNonogram(p, host){
 
   host.innerHTML = `
     <div class="q">Nonograma ${n}×${n}. Marca las casillas correctas usando los números
-      como guía (cada número indica un bloque de casillas seguidas).</div>
+      como guía (cada número indica un bloque de casillas seguidas).<br>
+      Al verificar, las casillas que pintaste se marcarán:
+      <span style="color:#2fbf71;font-weight:700">verde = correcta</span> ·
+      <span style="color:#e03131;font-weight:700">rojo = incorrecta</span>.</div>
     <div id="nonoWrap" style="display:flex;justify-content:center"></div>
     <div class="row">
       <button id="checkBtn" class="btn2">VERIFICAR (3)</button>
@@ -1126,6 +1130,8 @@ function buildNonogram(p, host){
       b.onclick = ()=>{
         if (state.resolved) return;
         b.classList.toggle('fill');
+        // Si el usuario cambia una casilla, ya no es válida la marca anterior
+        b.classList.remove('ok','bad');
       };
       wrap.appendChild(b);
     }
@@ -1157,6 +1163,21 @@ function buildNonogram(p, host){
     return true;
   }
 
+  // Marca cada casilla pintada: verde si es correcta, rojo si no.
+  // Devuelve {ok, bad} con los conteos.
+  function markPainted(){
+    wrap.querySelectorAll('.ncell').forEach(b => b.classList.remove('ok','bad'));
+    let ok = 0, bad = 0;
+    for (let r=0;r<n;r++) for (let c=0;c<n;c++){
+      const b = wrap.querySelector(`.ncell[data-r="${r}"][data-c="${c}"]`);
+      const painted = b.classList.contains('fill');
+      if (!painted) continue;
+      if (sol[r][c] === 1){ b.classList.add('ok'); ok++; }
+      else { b.classList.add('bad'); bad++; }
+    }
+    return { ok, bad };
+  }
+
   let checks = 3;
   const checkBtn = $('#checkBtn', host);
   const msg = $('#msg', host);
@@ -1167,16 +1188,21 @@ function buildNonogram(p, host){
     checkBtn.textContent = `VERIFICAR (${checks})`;
     if (checks === 0) checkBtn.disabled = true;
 
+    const counts = markPainted();
+
     if (cluesOK()){
       msg.textContent = '¡Nonograma resuelto!';
       resolve(true, '');
+    } else if (counts.ok === 0 && counts.bad === 0){
+      msg.textContent = 'No has marcado ninguna casilla.';
     } else {
-      msg.textContent = 'Todavía no coincide con las pistas.';
+      msg.textContent = `✔ ${counts.ok} correcta(s) · ✘ ${counts.bad} incorrecta(s)`;
     }
   };
 
   $('#endBtn', host).onclick = ()=>{
     if (state.resolved) return;
+    markPainted();
     const ok = cluesOK();
     resolve(ok, ok ? '' : 'El nonograma no coincide con las pistas.');
   };
