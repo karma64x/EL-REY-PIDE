@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#070709">
+<title>EL REY PIDE</title>
+<style>
+:root{
+  --bg:#070709;
+  --panel:#101014;
+  --panel2:#16161c;
+  --line:#26262e;
+  --line2:#3a3a46;
+  --txt:#ececf0;
+  --muted:#7c7c8a;
+  --red:#e03131;
+  --green:#2fbf71;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;min-height:100%;}
+body{
+  background:
+    radial-gradient(circle at 50% -10%, #14141a 0%, #070709 55%) fixed,
+    #070709;
+  color:var(--txt);
+  font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+}
+#app{min-height:100dvh;display:flex;flex-direction:column;}
+.screen{
+  flex:1;display:flex;flex-direction:column;gap:14px;
+  width:100%;max-width:520px;margin:0 auto;padding:18px 16px 40px;
+}
+.screen.center{justify-content:center;}
+
+/* ---------- brand ---------- */
+.brand{text-align:center;padding:10px 0 4px;}
+.suits{display:flex;justify-content:center;gap:10px;font-size:1.15rem;color:#5b5b68;letter-spacing:2px;margin-bottom:10px;}
+.suits .red{color:var(--red);opacity:.75;}
+.brand h1{
+  font-size:clamp(1.6rem,8vw,2.3rem);font-weight:800;letter-spacing:.22em;
+  margin:0;line-height:1.15;text-transform:uppercase;
+}
+.brand .sub{
+  margin:8px 0 0;font-size:.68rem;letter-spacing:.42em;color:var(--muted);
+  text-transform:uppercase;
+}
+
+/* ---------- card ---------- */
+.card{
+  background:linear-gradient(180deg,#101015,#0b0b0f);
+  border:1px solid var(--line);
+  border-radius:3px;
+  padding:18px 16px;
+  display:flex;flex-direction:column;gap:10px;
+  position:relative;
+}
+.card::before{
+  content:"";position:absolute;top:-1px;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+  opacity:.7;
+}
+label{
+  font-size:.62rem;letter-spacing:.22em;color:var(--muted);
+  text-transform:uppercase;margin-top:4px;
+}
+
+/* ---------- inputs ---------- */
+.pass, input[type=number], input[type=text], input[type=password]{
+  width:100%;background:#0a0a0e;border:1px solid var(--line2);
+  border-radius:2px;color:var(--txt);
+  padding:14px 12px;font-size:16px;font-family:inherit;
+  letter-spacing:.08em;outline:none;
+  -webkit-appearance:none;appearance:none;
+}
+.pass:focus{border-color:#5a5a6c;}
+.pass::placeholder{color:#3f3f4a;letter-spacing:.15em;font-size:.85rem;}
+.pass.upper{text-transform:uppercase;}
+
+/* ---------- buttons ---------- */
+.btn, .btn2{
+  font-family:inherit;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;cursor:pointer;border-radius:2px;
+  transition:background .15s,border-color .15s,transform .05s;
+}
+.btn{
+  background:#e9e9ec;color:#0a0a0e;border:1px solid #e9e9ec;
+  padding:15px 12px;font-size:.8rem;width:100%;
+}
+.btn:active{transform:scale(.985);}
+.btn2{
+  background:var(--panel2);color:var(--txt);border:1px solid var(--line2);
+  padding:12px 10px;font-size:.68rem;flex:1;
+}
+.btn2:active{background:#20202a;}
+.btn2:disabled{opacity:.35;}
+
+.row{display:flex;gap:8px;}
+
+/* ---------- topbar ---------- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border-bottom:1px solid var(--line);padding-bottom:10px;
+}
+.tag{font-size:.62rem;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;}
+.timer{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.95rem;letter-spacing:.1em;color:var(--txt);
+  border:1px solid var(--line2);border-radius:2px;padding:4px 9px;
+  background:#0a0a0e;
+}
+
+/* ---------- question ---------- */
+.q{
+  font-size:.95rem;line-height:1.55;letter-spacing:.02em;
+  border-left:2px solid var(--red);padding-left:12px;
+  color:#dcdce4;
+}
+.q .seq{
+  display:block;margin-top:10px;font-family:ui-monospace,Menlo,monospace;
+  font-size:1.05rem;letter-spacing:.18em;color:#fff;
+}
+.note{font-size:.7rem;color:var(--muted);letter-spacing:.08em;}
+
+/* ---------- options ---------- */
+.opts{display:grid;gap:8px;margin-top:4px;}
+.opts.one{grid-template-columns:1fr;}
+.opts.two{grid-template-columns:1fr 1fr;}
+.opts.three{grid-template-columns:repeat(3,1fr);}
+.opt{
+  display:flex;align-items:center;gap:10px;
+  background:var(--panel2);border:1px solid var(--line2);
+  border-radius:2px;color:var(--txt);font-family:inherit;
+  padding:13px 12px;font-size:.9rem;text-align:left;cursor:pointer;
+  transition:background .12s,border-color .12s;
+}
+.opt:active{background:#20202a;}
+.opt .idx{
+  font-size:.62rem;letter-spacing:.1em;color:var(--red);
+  border:1px solid #43252a;border-radius:2px;padding:2px 5px;min-width:20px;text-align:center;
+}
+.opt .otxt{flex:1;}
+.opt.right{background:#0f2a1c;border-color:var(--green);color:#8ff0bb;}
+.opt.right .idx{color:#8ff0bb;border-color:#1c5a3c;}
+.opt.wrong{background:#2a1012;border-color:var(--red);color:#ff9a9a;}
+.opt.wrong .idx{color:#ff9a9a;border-color:#5e2226;}
+.opt:disabled{opacity:1;cursor:default;}
+.opt svg{display:block;}
+.opts.three .opt{justify-content:center;padding:10px 6px;flex-direction:column;gap:4px;}
+
+/* ---------- result ---------- */
+.result{
+  border:1px solid var(--line2);border-radius:3px;padding:14px;
+  background:var(--panel);display:flex;flex-direction:column;gap:6px;
+  animation:fade .35s ease;
+}
+.result.ok{border-color:#1c5a3c;background:#0c1a13;}
+.result.bad{border-color:#5e2226;background:#180d0f;}
+.rlabel{font-weight:800;letter-spacing:.2em;font-size:.8rem;}
+.result.ok .rlabel{color:var(--green);}
+.result.bad .rlabel{color:var(--red);}
+.rdetail{font-size:.78rem;color:#c9c9d2;line-height:1.5;}
+.rdetail strong{color:#fff;}
+.rtime{font-size:.65rem;letter-spacing:.2em;color:var(--muted);font-family:ui-monospace,Menlo,monospace;}
+
+/* ---------- next box ---------- */
+.nextbox{
+  border:1px solid var(--line);border-radius:3px;padding:14px;
+  background:var(--panel);display:flex;flex-direction:column;gap:10px;
+  animation:fade .35s ease;
+}
+.hint{font-size:.62rem;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;margin:0;}
+.err{color:var(--red);font-size:.68rem;letter-spacing:.14em;margin:0;min-height:14px;}
+.msg{font-size:.72rem;color:var(--muted);letter-spacing:.08em;margin:0;text-align:center;min-height:16px;}
+
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.shake{animation:shake .3s;}
+
+/* ---------- sudoku ---------- */
+.sudoku{
+  display:grid;margin:0 auto;width:100%;
+  background:#0d0d11;border:2px solid var(--line2);
+}
+.sudoku.g4{grid-template-columns:repeat(4,1fr);max-width:280px;}
+.sudoku.g9{grid-template-columns:repeat(9,1fr);max-width:100%;}
+.sudoku .cell{
+  aspect-ratio:1/1;width:100%;display:flex;align-items:center;justify-content:center;
+  background:transparent;border:1px solid #1c1c24;border-radius:0;
+  color:var(--txt);font-size:16px;font-family:inherit;padding:0;min-width:0;
+  -webkit-appearance:none;appearance:none;outline:none;text-align:center;
+}
+.sudoku .cell.given{color:var(--muted);background:#141419;font-weight:700;}
+.sudoku .cell.br{border-right:2px solid var(--line2);}
+.sudoku .cell.bb{border-bottom:2px solid var(--line2);}
+.sudoku .cell.badcell{background:#2a1113;color:#ff8a8a;}
+
+/* ---------- minesweeper ---------- */
+.ms{display:grid;gap:2px;margin:0 auto;width:100%;max-width:400px;}
+.ms button{
+  aspect-ratio:1/1;background:#191921;border:1px solid #26262f;border-radius:2px;
+  color:var(--txt);font-size:clamp(13px,4.2vw,19px);font-weight:800;padding:0;
+  display:flex;align-items:center;justify-content:center;font-family:inherit;
+}
+.ms button.open{background:#0b0b0f;border-color:#191920;}
+.ms button.boom{background:#3a0d0d;border-color:#6b1a1a;}
+.ms button.flag{background:#1d1a10;}
+.ms button:disabled{opacity:1;}
+.n1{color:#6ea8fe}.n2{color:#4fae7a}.n3{color:#e05353}.n4{color:#9b7bd6}
+.n5{color:#d4a24c}.n6{color:#4fb8b8}.n7{color:#dcdcdc}.n8{color:#8a8a95}
+
+/* ---------- nonogram ---------- */
+.nono{display:grid;margin:0 auto;background:#0d0d11;border:2px solid var(--line2);}
+.ncorner{background:#0d0d11;}
+.nclue{display:flex;color:var(--muted);font-weight:800;line-height:1;}
+.nclue-col{flex-direction:column;justify-content:flex-end;align-items:center;gap:2px;padding-bottom:3px;}
+.nclue-row{flex-direction:row;justify-content:flex-end;align-items:center;gap:4px;padding-right:5px;}
+.ncell{
+  background:#17171e;border:1px solid #22222b;border-radius:0;padding:0;
+  font-family:inherit;-webkit-appearance:none;appearance:none;
+}
+.ncell.fill{background:#e9e9ec;border-color:#e9e9ec;}
+
+/* ---------- domino ---------- */
+.chain,.pool{
+  display:flex;flex-wrap:wrap;gap:3px;justify-content:center;
+  min-height:46px;padding:8px;border:1px dashed var(--line);border-radius:2px;
+}
+.chain{border-style:solid;border-color:var(--line2);background:#0b0b0f;}
+.pool{gap:7px;}
+.ph{font-size:.65rem;color:#3f3f4a;letter-spacing:.14em;align-self:center;}
+.domino{
+  display:flex;align-items:center;background:#ececf0;border:1px solid #b9b9c4;
+  border-radius:3px;padding:2px;gap:1px;cursor:pointer;
+}
+.dhalf{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);width:27px;height:27px;padding:3px;}
+.pip{width:5px;height:5px;border-radius:50%;background:#111;align-self:center;justify-self:center;}
+.nopip{width:5px;height:5px;}
+.domsep{width:1px;height:24px;background:#111;opacity:.35;}
+
+/* ---------- figure matrix ---------- */
+.matrix{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:6px;
+  max-width:300px;margin:0 auto;width:100%;
+}
+.mcell{
+  aspect-ratio:1/1;border:1px solid var(--line);border-radius:2px;
+  background:#0f0f14;display:flex;align-items:center;justify-content:center;
+}
+.mcell.q{color:#4a4a56;font-size:1.3rem;font-weight:800;border-style:dashed;}
+.mcell svg{width:76%;height:76%;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* =====================================================================
+   UTILIDADES
+===================================================================== */
+const app = document.getElementById('app');
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+function clear(){ app.innerHTML=''; }
+
+function shuffle(a){
+  const arr = a.slice();
+  for (let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function fmtTime(ms){
+  const s = Math.floor(ms/1000);
+  return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+}
+
+/* =====================================================================
+   CRONÓMETRO
+===================================================================== */
+const T = {
+  el:null, t0:0, acc:0, id:null, running:false,
+  start(node){
+    clearInterval(this.id);
+    this.el = node; this.acc = 0; this.t0 = Date.now(); this.running = true;
+    this.paint();
+    this.id = setInterval(()=>this.paint(), 250);
+  },
+  paint(){
+    if(!this.el) return;
+    const ms = this.acc + (this.running ? Date.now()-this.t0 : 0);
+    this.el.textContent = fmtTime(ms);
+  },
+  stop(){
+    if(!this.running) return;
+    this.acc += Date.now()-this.t0;
+    this.running = false;
+    clearInterval(this.id);
+    this.paint();
+  }
+};
+
+/* =====================================================================
+   DIBUJOS SVG (pruebas de figuras)
+===================================================================== */
+const C_RED='#e05353', C_BLUE='#5b8dd6', C_GREEN='#4fae7a';
+
+function shapeSVG(kind, color, s=44){
+  let inner='';
+  if(kind==='circle')   inner=`<circle cx="${s/2}" cy="${s/2}" r="${s*0.30}" fill="${color}"/>`;
+  if(kind==='square')   inner=`<rect x="${s*0.20}" y="${s*0.20}" width="${s*0.60}" height="${s*0.60}" fill="${color}"/>`;
+  if(kind==='triangle') inner=`<polygon points="${s/2},${s*0.16} ${s*0.85},${s*0.83} ${s*0.15},${s*0.83}" fill="${color}"/>`;
+  return `<svg viewBox="0 0 ${s} ${s}" width="${s}" height="${s}">${inner}</svg>`;
+}
+
+function arrowSVG(deg, s=44){
+  return `<svg viewBox="0 0 ${s} ${s}" width="${s}" height="${s}">
+    <g transform="rotate(${deg} ${s/2} ${s/2})">
+      <line x1="${s/2}" y1="${s*0.80}" x2="${s/2}" y2="${s*0.32}" stroke="#ececf0" stroke-width="3" stroke-linecap="round"/>
+      <polygon points="${s/2},${s*0.16} ${s*0.66},${s*0.38} ${s*0.34},${s*0.38}" fill="#ececf0"/>
+    </g></svg>`;
+}
+
+function quadSVG(filled, s=44){
+  const h = s/2;
+  const rects = filled.map(q=>{
+    const x = (q%2)*h, y = Math.floor(q/2)*h;
+    return `<rect x="${x}" y="${y}" width="${h}" height="${h}" fill="#ececf0"/>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${s} ${s}" width="${s}" height="${s}">
+    <rect x="1" y="1" width="${s-2}" height="${s-2}" fill="none" stroke="#55555f" stroke-width="1.5"/>
+    ${rects}</svg>`;
+}
+
+/* =====================================================================
+   DATOS DE LOS ACERTIJOS
+===================================================================== */
+const PWD_LOGIN = 'BIOLIMPIADAS';
+
+const STAGE1 = [
+  /* 1 */
+  {
+    title:'ACERTIJO 01',
+    type:'mc',
+    question:'Hace tres días, antes de hoy, era un día antes del lunes.<br>¿Qué día será pasado mañana?',
+    options:['LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES','SÁBADO','DOMINGO'],
+    answer:4,
+    next:'1'
+  },
+  /* 2 */
+  {
+    title:'ACERTIJO 02',
+    type:'mc',
+    question:'¿Cuál es la siguiente letra de la progresión?<span class="seq">… T, C, C, S, S, O, …</span>',
+    options:['O','P','M','N','L'],
+    answer:3,
+    next:'1'
+  },
+  /* 3 — sudoku 4x4 (bloques 2x2) */
+  {
+    title:'ACERTIJO 03',
+    type:'sudoku',
+    n:4,
+    puzzle:[
+      [1,2,0,4],
+      [3,4,1,0],
+      [0,1,4,0],
+      [4,0,0,1]
+    ],
+    solution:[
+      [1,2,3,4],
+      [3,4,1,2],
+      [2,1,4,3],
+      [4,3,2,1]
+    ],
+    next:'2'
+  },
+  /* 4 — sudoku 9x9 (bloques 3x3) */
+  {
+    title:'ACERTIJO 04',
+    type:'sudoku',
+    n:9,
+    puzzle:[
+      [5,3,0,0,7,0,0,0,0],
+      [6,0,0,1,9,5,0,0,0],
+      [0,9,8,0,0,0,0,6,0],
+      [8,0,0,0,6,0,0,0,3],
+      [4,0,0,8,0,3,0,0,1],
+      [7,0,0,0,2,0,0,0,6],
+      [0,6,0,0,0,0,2,8,0],
+      [0,0,0,4,1,9,0,0,5],
+      [0,0,0,0,8,0,0,7,9]
+    ],
+    solution:[
+      [5,3,4,6,7,8,9,1,2],
+      [6,7,2,1,9,5,3,4,8],
+      [1,9,8,3,4,2,5,6,7],
+      [8,5,9,7,6,1,4,2,3],
+      [4,2,6,8,5,3,7,9,1],
+      [7,1,3,9,2,4,8,5,6],
+      [9,6,1,5,3,7,2,8,4],
+      [2,8,7,4,1,9,6,3,5],
+      [3,4,5,2,8,6,1,7,9]
+    ],
+    next:'4'
+  },
+  /* 5 — buscaminas 6x6 / 10 minas */
+  { title:'ACERTIJO 05', type:'mines', rows:6, cols:6, mines:10, next:'8' },
+  /* 6 — buscaminas 7x7 / 12 minas */
+  { title:'ACERTIJO 06', type:'mines', rows:7, cols:7, mines:12, next:'16' },
+  /* 7 — (acertijo añadido para completar los 8 de la etapa) */
+  {
+    title:'ACERTIJO 07',
+    type:'mc',
+    question:'¿Qué número continúa la serie?<span class="seq">1, 2, 4, 8, 16, ?</span>',
+    options:['24','30','32','64'],
+    answer:2,
+    next:'32'
+  },
+  /* 8 — nonograma 5x5 */
+  {
+    title:'ACERTIJO 08',
+    type:'nonogram',
+    solution:[
+      [0,0,1,0,0],
+      [0,1,1,1,0],
+      [1,1,1,1,1],
+      [0,0,1,0,0],
+      [0,1,0,1,0]
+    ],
+    stageEnd:true
+  }
+];
+
+const STAGE2 = [
+  /* 1 */
+  {
+    title:'ACERTIJO 01',
+    type:'text',
+    question:'Resuelve la sumatoria:<span class="seq">100 + 200 + 300 + 444 + 555 = ?</span>',
+    answer:'1599',
+    next:'10'
+  },
+  /* 2 */
+  {
+    title:'ACERTIJO 02',
+    type:'mc',
+    question:'Si A = B, C = D y A = D, ¿qué relación hay entre C y B?',
+    options:['&lt;','=','&gt;','≠'],
+    answer:1,
+    next:'11'
+  },
+  /* 3 — nonograma 7x7 */
+  {
+    title:'ACERTIJO 03',
+    type:'nonogram',
+    solution:[
+      [0,0,1,1,1,0,0],
+      [0,1,1,0,1,1,0],
+      [1,1,0,0,0,1,1],
+      [1,1,0,0,0,1,1],
+      [0,1,1,0,1,1,0],
+      [0,0,1,1,1,0,0],
+      [0,0,0,1,0,0,0]
+    ],
+    next:'100'
+  },
+  /* 4 — 6 dominós */
+  { title:'ACERTIJO 04', type:'domino', count:6, next:'101' },
+  /* 5 — 8 dominós */
+  { title:'ACERTIJO 05', type:'domino', count:8, next:'110' },
+  /* 6 — figura, 4 opciones, correcta D */
+  {
+    title:'ACERTIJO 06',
+    type:'figure',
+    question:'¿Qué figura completa la matriz?',
+    matrix:[
+      shapeSVG('circle',C_RED),   shapeSVG('square',C_BLUE),   shapeSVG('triangle',C_GREEN),
+      shapeSVG('square',C_GREEN), shapeSVG('triangle',C_RED),  shapeSVG('circle',C_BLUE),
+      shapeSVG('triangle',C_BLUE),shapeSVG('circle',C_GREEN),  null
+    ],
+    options:[
+      shapeSVG('triangle',C_RED),
+      shapeSVG('circle',C_RED),
+      shapeSVG('square',C_BLUE),
+      shapeSVG('square',C_RED)
+    ],
+    answer:3,
+    next:'111'
+  },
+  /* 7 — figura, 5 opciones, correcta A */
+  {
+    title:'ACERTIJO 07',
+    type:'figure',
+    question:'¿Qué figura completa la matriz?',
+    matrix:[
+      arrowSVG(0),   arrowSVG(45),  arrowSVG(90),
+      arrowSVG(45),  arrowSVG(90),  arrowSVG(135),
+      arrowSVG(90),  arrowSVG(135), null
+    ],
+    options:[
+      arrowSVG(180),
+      arrowSVG(135),
+      arrowSVG(225),
+      arrowSVG(90),
+      arrowSVG(315)
+    ],
+    answer:0,
+    next:'1000'
+  },
+  /* 8 — figura, 6 opciones, correcta C */
+  {
+    title:'ACERTIJO 08',
+    type:'figure',
+    question:'¿Qué figura completa la matriz?',
+    matrix:[
+      quadSVG([0]), quadSVG([1]), quadSVG([3]),
+      quadSVG([1]), quadSVG([3]), quadSVG([2]),
+      quadSVG([3]), quadSVG([2]), null
+    ],
+    options:[
+      quadSVG([3]),
+      quadSVG([2]),
+      quadSVG([0]),
+      quadSVG([1]),
+      quadSVG([0,3]),
+      quadSVG([1,2])
+    ],
+    answer:2,
+    end:true
+  }
+];
+
+const STAGES = [STAGE1, STAGE2];
+
+/* =====================================================================
+   ESTADO
+===================================================================== */
+const state = { player:null, stage:0, index:0, resolved:false };
+
+function getPuzzle(){ return STAGES[state.stage][state.index]; }
+
+function saveProgress(){
+  try{
+    localStorage.setItem('rey_'+state.player, JSON.stringify({stage:state.stage,index:state.index}));
+  }catch(e){}
+}
+function loadProgress(){
+  try{
+    const d = JSON.parse(localStorage.getItem('rey_'+state.player));
+    if (d && typeof d.stage==='number' && typeof d.index==='number') return d;
+  }catch(e){}
+  return null;
+}
+
+/* =====================================================================
+   PANTALLA: LOGIN
+===================================================================== */
+function renderLogin(){
+  clear();
+  app.innerHTML = `
+  <div class="screen center">
+    <div class="brand">
+      <div class="suits"><span>♠</span><span class="red">♥</span><span class="red">♦</span><span>♣</span></div>
+      <h1>EL REY PIDE</h1>
+      <p class="sub">BIOLIMPIADAS</p>
+    </div>
+    <div class="card">
+      <label>Número de jugador</label>
+      <input id="pnum" type="number" inputmode="numeric" min="1" placeholder="1" autocomplete="off">
+      <label>Contraseña</label>
+      <input id="ppass" type="password" placeholder="••••••••" autocomplete="off">
+      <button class="btn" id="enter">ENTRAR</button>
+      <p class="err" id="lerr"></p>
+    </div>
+  </div>`;
+
+  const go = () => {
+    const num = parseInt($('#pnum').value, 10);
+    const pass = ($('#ppass').value || '').trim().toUpperCase();
+    const err = $('#lerr');
+    if (!num || num < 1){ err.textContent = 'NÚMERO INVÁLIDO'; return; }
+    if (pass !== PWD_LOGIN){ err.textContent = 'CONTRASEÑA INCORRECTA'; return; }
+    state.player = num;
+    const prog = loadProgress();
+    if (prog){
+      state.stage = Math.min(prog.stage, STAGES.length-1);
+      state.index = prog.index;
+      if (state.index >= STAGES[state.stage].length) state.index = 0;
+    } else {
+      state.stage = 0; state.index = 0;
+    }
+    renderPuzzle();
+  };
+
+  $('#enter').onclick = go;
+  $('#ppass').addEventListener('keydown', e=>{ if(e.key==='Enter') go(); });
+  $('#pnum').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#ppass').focus(); });
+}
+
+/* =====================================================================
+   PANTALLA: ACERTIJO
+===================================================================== */
+function renderPuzzle(){
+  const p = getPuzzle();
+  state.resolved = false;
+  clear();
+  app.innerHTML = `
+    <div class="screen">
+      <div class="topbar">
+        <span class="tag">ETAPA ${state.stage+1} · ${p.title}</span>
+        <span class="timer" id="timer">00:00</span>
+      </div>
+      <div id="pbody"></div>
+      <div class="result" id="result" hidden></div>
+      <div class="nextbox" id="nextBox" hidden></div>
+    </div>`;
+  T.start($('#timer'));
+  buildPuzzle(p, $('#pbody'));
+}
+
+function buildPuzzle(p, host){
+  switch(p.type){
+    case 'mc':       return buildMC(p, host);
+    case 'text':     return buildText(p, host);
+    case 'sudoku':   return buildSudoku(p, host);
+    case 'mines':    return buildMines(p, host);
+    case 'nonogram': return buildNonogram(p, host);
+    case 'domino':   return buildDomino(p, host);
+    case 'figure':   return buildFigure(p, host);
+  }
+}
+
+/* ---------- resolución genérica ---------- */
+function resolve(success, detail){
+  if (state.resolved) return;
+  state.resolved = true;
+  T.stop();
+
+  const res = $('#result');
+  if (!res) return;
+  res.hidden = false;
+  res.classList.remove('ok','bad');
+  res.classList.add(success ? 'ok' : 'bad');
+  res.innerHTML = `
+    <div class="rlabel">${success ? '✔ CORRECTO' : '✘ INCORRECTO'}</div>
+    ${detail ? `<div class="rdetail">${detail}</div>` : ''}
+    <div class="rtime">TIEMPO · ${$('#timer').textContent}</div>`;
+
+  showNext(getPuzzle());
+  setTimeout(()=>{ try{ res.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){} }, 90);
+}
+
+function showNext(p){
+  const box = $('#nextBox');
+  if (!box) return;
+  box.hidden = false;
+
+  if (p.end){
+    box.innerHTML = `<p class="hint">Has completado todas las etapas</p>
+      <button class="btn" id="goBtn">FINALIZAR</button>`;
+    $('#goBtn').onclick = renderEnd;
+    return;
+  }
+  if (p.stageEnd){
+    box.innerHTML = `<p class="hint">Etapa 1 completada</p>
+      <button class="btn" id="goBtn">CONTINUAR</button>`;
+    $('#goBtn').onclick = renderStageMenu;
+    return;
+  }
+
+  box.innerHTML = `
+    <p class="hint">Contraseña para el siguiente acertijo</p>
+    <input id="nextPass" class="pass upper" type="text" autocomplete="off"
+           autocapitalize="characters" spellcheck="false" placeholder="CONTRASEÑA">
+    <button class="btn" id="goBtn">CONTINUAR</button>
+    <p class="err" id="nextErr"></p>`;
+
+  const inp = $('#nextPass');
+  const go = () => {
+    const v = (inp.value||'').trim().toUpperCase();
+    if (v === String(p.next).toUpperCase()){
+      state.index++;
+      saveProgress();
+      renderPuzzle();
+    } else {
+      $('#nextErr').textContent = 'CONTRASEÑA INCORRECTA';
+      inp.classList.add('shake');
+      setTimeout(()=>inp.classList.remove('shake'), 400);
+    }
+  };
+  $('#goBtn').onclick = go;
+  inp.addEventListener('keydown', e=>{ if(e.key==='Enter') go(); });
+}
+
+/* =====================================================================
+   TIPO: OPCIÓN MÚLTIPLE
+===================================================================== */
+function buildMC(p, host){
+  const cols = p.options.length > 4 ? 'two' : 'one';
+  host.innerHTML = `<div class="q">${p.question}</div>
+    <div class="opts ${cols}" id="optsBox"></div>`;
+
+  const box = $('#optsBox', host);
+  p.options.forEach((opt, i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = `<span class="idx">${String.fromCharCode(65+i)}</span><span class="otxt">${opt}</span>`;
+    b.onclick = ()=>{
+      if (state.resolved) return;
+      const ok = (i === p.answer);
+      Array.from(box.children).forEach((c, j)=>{
+        c.disabled = true;
+        if (j === p.answer) c.classList.add('right');
+        if (j === i && !ok) c.classList.add('wrong');
+      });
+      resolve(ok, ok ? '' : `La respuesta correcta era <strong>${p.options[p.answer]}</strong>.`);
+    };
+    box.appendChild(b);
+  });
+}
+
+/* =====================================================================
+   TIPO: RESPUESTA ESCRITA
+===================================================================== */
+function buildText(p, host){
+  host.innerHTML = `<div class="q">${p.question}</div>
+    <div class="row">
+      <input id="ans" class="pass" inputmode="numeric" placeholder="RESPUESTA"
+             autocomplete="off" style="flex:2">
+      <button id="send" class="btn2" style="flex:1">ENVIAR</button>
+    </div>`;
+
+  const inp = $('#ans', host);
+  const send = ()=>{
+    if (state.resolved) return;
+    const v = (inp.value||'').trim().replace(/[\s.,]/g,'');
+    if (!v) return;
+    const ok = (v === String(p.answer));
+    inp.disabled = true;
+    $('#send', host).disabled = true;
+    resolve(ok, ok ? '' : `La respuesta correcta era <strong>${p.answer}</strong>.`);
+  };
+  $('#send', host).onclick = send;
+  inp.addEventListener('keydown', e=>{ if(e.key==='Enter') send(); });
+}
+
+/* =====================================================================
+   TIPO: SUDOKU
+===================================================================== */
+function buildSudoku(p, host){
+  const n = p.n;
+  const box = Math.round(Math.sqrt(n));
+
+  host.innerHTML = `
+    <div class="q">Completa el sudoku. Cada fila, columna y bloque de
+      ${box}×${box} debe contener los números del 1 al ${n} sin repetir.</div>
+    <div class="sudoku g${n}" id="sdk"></div>
+    <div class="row">
+      <button id="checkBtn" class="btn2">VERIFICAR (3)</button>
+      <button id="endBtn" class="btn2">TERMINAR</button>
+    </div>
+    <p class="msg" id="msg"></p>`;
+
+  const g = $('#sdk', host);
+
+  for (let r=0;r<n;r++){
+    for (let c=0;c<n;c++){
+      const v = p.puzzle[r][c];
+      let node;
+      if (v){
+        node = document.createElement('div');
+        node.className = 'cell given';
+        node.textContent = v;
+      } else {
+        node = document.createElement('input');
+        node.className = 'cell';
+        node.type = 'text';
+        node.inputMode = 'numeric';
+        node.maxLength = 1;
+        node.autocomplete = 'off';
+        node.dataset.r = r;
+        node.dataset.c = c;
+        const re = new RegExp('[^1-'+n+']','g');
+        node.addEventListener('input', ()=>{
+          node.value = node.value.replace(re,'').slice(-1);
+          node.classList.remove('badcell');
+        });
+      }
+      if (c % box === box-1 && c !== n-1) node.classList.add('br');
+      if (r % box === box-1 && r !== n-1) node.classList.add('bb');
+      g.appendChild(node);
+    }
+  }
+
+  function readGrid(){
+    const grid = p.puzzle.map(row=>row.slice());
+    $$('input', g).forEach(inp=>{
+      const r = +inp.dataset.r, c = +inp.dataset.c;
+      grid[r][c] = inp.value ? parseInt(inp.value,10) : 0;
+    });
+    return grid;
+  }
+
+  function markWrong(grid){
+    $$('input', g).forEach(inp=>{
+      const r = +inp.dataset.r, c = +inp.dataset.c;
+      if (grid[r][c] && grid[r][c] !== p.solution[r][c]) inp.classList.add('badcell');
+      else inp.classList.remove('badcell');
+    });
+  }
+
+  let checks = 3;
+  const checkBtn = $('#checkBtn', host);
+  const endBtn   = $('#endBtn', host);
+  const msg      = $('#msg', host);
+
+  checkBtn.onclick = ()=>{
+    if (state.resolved || checks <= 0) return;
+    checks--;
+    checkBtn.textContent = `VERIFICAR (${checks})`;
+    if (checks === 0) checkBtn.disabled = true;
+
+    const grid = readGrid();
+    let filled = 0, wrong = 0;
+    for (let r=0;r<n;r++) for (let c=0;c<n;c++){
+      if (grid[r][c]) filled++;
+      if (grid[r][c] && grid[r][c] !== p.solution[r][c]) wrong++;
+    }
+    markWrong(grid);
+
+    if (wrong === 0 && filled === n*n){
+      msg.textContent = 'Sudoku resuelto correctamente.';
+      resolve(true, '');
+      return;
+    }
+    if (wrong === 0){
+      msg.textContent = `Sin errores hasta ahora. Faltan ${n*n-filled} casilla(s).`;
+    } else {
+      msg.textContent = `${wrong} casilla(s) incorrecta(s).`;
+    }
+  };
+
+  endBtn.onclick = ()=>{
+    if (state.resolved) return;
+    const grid = readGrid();
+    let ok = true;
+    for (let r=0;r<n;r++) for (let c=0;c<n;c++){
+      if (grid[r][c] !== p.solution[r][c]) ok = false;
+    }
+    resolve(ok, ok ? '' : 'El sudoku no está completo o contiene errores.');
+  };
+}
+
+/* =====================================================================
+   TIPO: BUSCAMINAS
+===================================================================== */
+function buildMines(p, host){
+  const R = p.rows, C = p.cols, M = p.mines;
+
+  host.innerHTML = `
+    <div class="q">Buscaminas ${R}×${C} · ${M} minas.<br>
+      Toca una casilla para descubrirla. Activa el modo bandera para marcar minas.</div>
+    <div class="row"><button id="flagBtn" class="btn2">🚩 MODO BANDERA: OFF</button></div>
+    <div class="ms" id="ms" style="grid-template-columns:repeat(${C},1fr)"></div>
+    <p class="msg" id="msg">Minas restantes: ${M}</p>`;
+
+  const grid = $('#ms', host);
+  const msg  = $('#msg', host);
+  const flagBtn = $('#flagBtn', host);
+
+  let mine = [], adj = [], rev = [], flag = [];
+  let started = false, over = false, flags = 0, revealedCount = 0, flagMode = false;
+  const cells = [];
+
+  for (let r=0;r<R;r++){
+    cells.push([]);
+    for (let c=0;c<C;c++){
+      const b = document.createElement('button');
+      b.type = 'button';
+      cells[r][c] = b;
+      b.onclick = ()=> onCell(r,c);
+      grid.appendChild(b);
+    }
+  }
+
+  function init(safeR, safeC){
+    mine = Array.from({length:R}, ()=> Array(C).fill(false));
+    adj  = Array.from({length:R}, ()=> Array(C).fill(0));
+    rev  = Array.from({length:R}, ()=> Array(C).fill(false));
+    flag = Array.from({length:R}, ()=> Array(C).fill(false));
+
+    const forbidden = new Set();
+    if (safeR != null){
+      for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++){
+        const r = safeR+dr, c = safeC+dc;
+        if (r>=0 && r<R && c>=0 && c<C) forbidden.add(r*C+c);
+      }
+    }
+
+    let placed = 0, guard = 0;
+    while (placed < M && guard < 8000){
+      guard++;
+      const idx = Math.floor(Math.random()*R*C);
+      if (forbidden.has(idx)) continue;
+      const r = Math.floor(idx/C), c = idx%C;
+      if (mine[r][c]) continue;
+      mine[r][c] = true;
+      placed++;
+    }
+    // relleno de seguridad
+    let i = 0;
+    while (placed < M && i < R*C){
+      const r = Math.floor(i/C), c = i%C;
+      if (!mine[r][c]){ mine[r][c] = true; placed++; }
+      i++;
+    }
+
+    for (let r=0;r<R;r++) for (let c=0;c<C;c++){
+      if (mine[r][c]) continue;
+      let k = 0;
+      for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++){
+        if (!dr && !dc) continue;
+        const rr = r+dr, cc = c+dc;
+        if (rr>=0 && rr<R && cc>=0 && cc<C && mine[rr][cc]) k++;
+      }
+      adj[r][c] = k;
+    }
+  }
+
+  function paint(r,c){
+    const b = cells[r][c];
+    b.className = '';
+    if (rev[r][c]){
+      b.classList.add('open');
+      if (mine[r][c]){
+        b.classList.add('boom');
+        b.textContent = '💥';
+      } else if (adj[r][c] > 0){
+        b.textContent = adj[r][c];
+        b.classList.add('n'+adj[r][c]);
+      } else {
+        b.textContent = '';
+      }
+    } else {
+      b.textContent = flag[r][c] ? '🚩' : '';
+      if (flag[r][c]) b.classList.add('flag');
+    }
+  }
+
+  function updateMsg(){
+    msg.textContent = `Minas restantes: ${M - flags}`;
+  }
+
+  function gameOver(){
+    over = true;
+    for (let r=0;r<R;r++) for (let c=0;c<C;c++){
+      if (mine[r][c] && !rev[r][c]){
+        cells[r][c].textContent = '💣';
+        cells[r][c].classList.add('open');
+      }
+    }
+    resolve(false, 'Pisaste una mina. El campo ha explotado.');
+  }
+
+  function checkWin(){
+    if (over) return;
+    if (revealedCount === R*C - M){
+      over = true;
+      resolve(true, '¡Campo despejado por completo!');
+    }
+  }
+
+  function checkFlagWin(){
+    if (over || !started) return;
+    let f = 0, ok = true;
+    for (let r=0;r<R;r++) for (let c=0;c<C;c++){
+      if (flag[r][c]){
+        f++;
+        if (!mine[r][c]) ok = false;
+      }
+    }
+    if (ok && f === M){
+      over = true;
+      resolve(true, '¡Todas las minas han sido marcadas!');
+    }
+  }
+
+  function reveal(r,c){
+    if (rev[r][c] || flag[r][c]) return;
+    if (!started){ started = true; init(r,c); }
+
+    if (mine[r][c]){
+      rev[r][c] = true;
+      paint(r,c);
+      gameOver();
+      return;
+    }
+
+    const stack = [[r,c]];
+    while (stack.length){
+      const [rr,cc] = stack.pop();
+      if (rr<0 || rr>=R || cc<0 || cc>=C) continue;
+      if (rev[rr][cc] || flag[rr][cc]) continue;
+      rev[rr][cc] = true;
+      revealedCount++;
+      paint(rr,cc);
+      if (adj[rr][cc] === 0){
+        for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++){
+          if (dr || dc) stack.push([rr+dr, cc+dc]);
+        }
+      }
+    }
+    checkWin();
+  }
+
+  function onCell(r,c){
+    if (over || state.resolved) return;
+
+    if (flagMode){
+      if (rev[r][c]) return;
+      if (!started){ started = true; init(Math.floor(R/2), Math.floor(C/2)); }
+      flag[r][c] = !flag[r][c];
+      flags += flag[r][c] ? 1 : -1;
+      paint(r,c);
+      updateMsg();
+      checkFlagWin();
+      return;
+    }
+    reveal(r,c);
+  }
+
+  flagBtn.onclick = ()=>{
+    flagMode = !flagMode;
+    flagBtn.textContent = '🚩 MODO BANDERA: ' + (flagMode ? 'ON' : 'OFF');
+  };
+}
+
+/* =====================================================================
+   TIPO: NONOGRAMA
+===================================================================== */
+function lineClue(arr){
+  const res = [];
+  let run = 0;
+  for (const v of arr){
+    if (v){ run++; }
+    else if (run){ res.push(run); run = 0; }
+  }
+  if (run) res.push(run);
+  return res.length ? res : [0];
+}
+
+function buildNonogram(p, host){
+  const sol = p.solution;
+  const n = sol.length;
+
+  host.innerHTML = `
+    <div class="q">Nonograma ${n}×${n}. Marca las casillas correctas usando los números
+      como guía (cada número indica un bloque de casillas seguidas).</div>
+    <div id="nonoWrap" style="display:flex;justify-content:center"></div>
+    <div class="row">
+      <button id="checkBtn" class="btn2">VERIFICAR (3)</button>
+      <button id="endBtn" class="btn2">TERMINAR</button>
+    </div>
+    <p class="msg" id="msg"></p>`;
+
+  const totalW = Math.min(window.innerWidth - 46, 380);
+  const cell = Math.max(24, Math.floor(totalW / (n + 2)));
+  const clueSize = cell * 2;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'nono';
+  wrap.style.gridTemplateColumns = `${clueSize}px repeat(${n}, ${cell}px)`;
+  wrap.style.gridTemplateRows = `${clueSize}px repeat(${n}, ${cell}px)`;
+
+  const fs = Math.max(9, Math.round(cell * 0.34)) + 'px';
+
+  // esquina
+  const corner = document.createElement('div');
+  corner.className = 'ncorner';
+  wrap.appendChild(corner);
+
+  // pistas de columnas
+  for (let c=0;c<n;c++){
+    const d = document.createElement('div');
+    d.className = 'nclue nclue-col';
+    d.style.fontSize = fs;
+    lineClue(sol.map(row=>row[c])).forEach(v=>{
+      const s = document.createElement('span');
+      s.textContent = v;
+      d.appendChild(s);
+    });
+    wrap.appendChild(d);
+  }
+
+  // filas
+  for (let r=0;r<n;r++){
+    const d = document.createElement('div');
+    d.className = 'nclue nclue-row';
+    d.style.fontSize = fs;
+    lineClue(sol[r]).forEach(v=>{
+      const s = document.createElement('span');
+      s.textContent = v;
+      d.appendChild(s);
+    });
+    wrap.appendChild(d);
+
+    for (let c=0;c<n;c++){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ncell';
+      b.dataset.r = r;
+      b.dataset.c = c;
+      b.onclick = ()=>{
+        if (state.resolved) return;
+        b.classList.toggle('fill');
+      };
+      wrap.appendChild(b);
+    }
+  }
+
+  $('#nonoWrap', host).appendChild(wrap);
+
+  function readGrid(){
+    const g = [];
+    for (let r=0;r<n;r++){
+      g.push([]);
+      for (let c=0;c<n;c++){
+        const b = wrap.querySelector(`.ncell[data-r="${r}"][data-c="${c}"]`);
+        g[r].push(b.classList.contains('fill') ? 1 : 0);
+      }
+    }
+    return g;
+  }
+
+  function cluesOK(){
+    const g = readGrid();
+    for (let r=0;r<n;r++){
+      if (lineClue(g[r]).join(',') !== lineClue(sol[r]).join(',')) return false;
+    }
+    for (let c=0;c<n;c++){
+      if (lineClue(g.map(row=>row[c])).join(',') !==
+          lineClue(sol.map(row=>row[c])).join(',')) return false;
+    }
+    return true;
+  }
+
+  let checks = 3;
+  const checkBtn = $('#checkBtn', host);
+  const msg = $('#msg', host);
+
+  checkBtn.onclick = ()=>{
+    if (state.resolved || checks <= 0) return;
+    checks--;
+    checkBtn.textContent = `VERIFICAR (${checks})`;
+    if (checks === 0) checkBtn.disabled = true;
+
+    if (cluesOK()){
+      msg.textContent = '¡Nonograma resuelto!';
+      resolve(true, '');
+    } else {
+      msg.textContent = 'Todavía no coincide con las pistas.';
+    }
+  };
+
+  $('#endBtn', host).onclick = ()=>{
+    if (state.resolved) return;
+    const ok = cluesOK();
+    resolve(ok, ok ? '' : 'El nonograma no coincide con las pistas.');
+  };
+}
+
+/* =====================================================================
+   TIPO: DOMINÓ
+===================================================================== */
+function makeChain(n){
+  for (let attempt=0; attempt<300; attempt++){
+    const used = new Set();
+    const tiles = [];
+    let cur = Math.floor(Math.random()*7);
+    let ok = true;
+    for (let i=0;i<n;i++){
+      const cands = [];
+      for (let v=0;v<7;v++){
+        const key = Math.min(cur,v)+'-'+Math.max(cur,v);
+        if (!used.has(key)) cands.push(v);
+      }
+      if (!cands.length){ ok = false; break; }
+      const nxt = cands[Math.floor(Math.random()*cands.length)];
+      used.add(Math.min(cur,nxt)+'-'+Math.max(cur,nxt));
+      tiles.push([cur,nxt]);
+      cur = nxt;
+    }
+    if (ok) return tiles;
+  }
+  return [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0],[0,2]].slice(0,n);
+}
+
+function halfHTML(v){
+  const POS = {
+    0:[],
+    1:[4],
+    2:[0,8],
+    3:[0,4,8],
+    4:[0,2,6,8],
+    5:[0,2,4,6,8],
+    6:[0,2,3,5,6,8]
+  }[v] || [];
+  let h = '<div class="dhalf">';
+  for (let i=0;i<9;i++) h += POS.includes(i) ? '<i class="pip"></i>' : '<i class="nopip"></i>';
+  h += '</div>';
+  return h;
+}
+
+function dominoEl(a, b){
+  const d = document.createElement('button');
+  d.type = 'button';
+  d.className = 'domino';
+  d.innerHTML = halfHTML(a) + '<div class="domsep"></div>' + halfHTML(b);
+  return d;
+}
+
+function buildDomino(p, host){
+  const tiles = makeChain(p.count);
+  let pool = shuffle([...Array(tiles.length).keys()]);
+  let placed = [];
+
+  host.innerHTML = `
+    <div class="q">Ordena los ${p.count} dominós formando una cadena válida:
+      los números que se tocan deben coincidir.<br>
+      Toca una ficha para colocarla · toca una ficha de la cadena para devolverla.</div>
+    <div class="chain" id="chain"></div>
+    <div class="pool" id="pool"></div>
+    <div class="row">
+      <button id="verBtn" class="btn2">VERIFICAR</button>
+      <button id="endBtn" class="btn2">TERMINAR</button>
+    </div>
+    <p class="msg" id="msg"></p>`;
+
+  const chainBox = $('#chain', host);
+  const poolBox  = $('#pool', host);
+  const msg      = $('#msg', host);
+
+  function renderAll(){
+    chainBox.innerHTML = '';
+    poolBox.innerHTML = '';
+
+    placed.forEach((idx, pos)=>{
+      const d = dominoEl(tiles[idx][0], tiles[idx][1]);
+      d.onclick = ()=>{
+        if (state.resolved) return;
+        placed.splice(pos,1);
+        pool.push(idx);
+        renderAll();
+      };
+      chainBox.appendChild(d);
+    });
+    if (!placed.length){
+      const ph = document.createElement('span');
+      ph.className = 'ph';
+      ph.textContent = 'TOCA LAS FICHAS PARA FORMAR LA CADENA…';
+      chainBox.appendChild(ph);
+    }
+
+    pool.slice().forEach((idx, pos)=>{
+      const d = dominoEl(tiles[idx][0], tiles[idx][1]);
+      d.onclick = ()=>{
+        if (state.resolved) return;
+        pool.splice(pos,1);
+        placed.push(idx);
+        renderAll();
+      };
+      poolBox.appendChild(d);
+    });
+  }
+
+  $('#verBtn', host).onclick = ()=>{
+    if (state.resolved) return;
+    if (placed.length !== tiles.length){
+      msg.textContent = 'Coloca todas las fichas primero.';
+      return;
+    }
+    for (let i=0;i<placed.length-1;i++){
+      if (tiles[placed[i]][1] !== tiles[placed[i+1]][0]){
+        msg.textContent = 'La cadena no es válida. Sigue intentando.';
+        return;
+      }
+    }
+    msg.textContent = '¡Cadena correcta!';
+    resolve(true, '');
+  };
+
+  $('#endBtn', host).onclick = ()=>{
+    if (state.resolved) return;
+    resolve(false, 'Terminaste sin completar la cadena correctamente.');
+  };
+
+  renderAll();
+}
+
+/* =====================================================================
+   TIPO: FIGURAS (IQ)
+===================================================================== */
+function buildFigure(p, host){
+  const cols = p.options.length > 4 ? 'three' : 'two';
+
+  host.innerHTML = `<div class="q">${p.question}</div>
+    <div class="matrix" id="mat"></div>
+    <div class="opts ${cols}" id="optsBox"></div>`;
+
+  const mat = $('#mat', host);
+  p.matrix.forEach(cellSVG=>{
+    const d = document.createElement('div');
+    if (cellSVG){
+      d.className = 'mcell';
+      d.innerHTML = cellSVG;
+    } else {
+      d.className = 'mcell q';
+      d.textContent = '?';
+    }
+    mat.appendChild(d);
+  });
+
+  const box = $('#optsBox', host);
+  p.options.forEach((opt, i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = `<span class="idx">${String.fromCharCode(65+i)}</span>${opt}`;
+    b.onclick = ()=>{
+      if (state.resolved) return;
+      const ok = (i === p.answer);
+      Array.from(box.children).forEach((c, j)=>{
+        c.disabled = true;
+        if (j === p.answer) c.classList.add('right');
+        if (j === i && !ok) c.classList.add('wrong');
+      });
+      resolve(ok, ok ? '' : `La opción correcta era <strong>${String.fromCharCode(65+p.answer)}</strong>.`);
+    };
+    box.appendChild(b);
+  });
+}
+
+/* =====================================================================
+   PANTALLA: MENÚ ENTRE ETAPAS
+===================================================================== */
+function renderStageMenu(){
+  clear();
+  app.innerHTML = `
+    <div class="screen center">
+      <div class="brand">
+        <div class="suits"><span>♠</span><span class="red">♥</span><span class="red">♦</span><span>♣</span></div>
+        <h1>ETAPA 1<br>COMPLETADA</h1>
+        <p class="sub">JUGADOR #${state.player}</p>
+      </div>
+      <div class="card">
+        <p class="hint">Solo una contraseña</p>
+        <input id="mp" class="pass upper" type="text" autocomplete="off"
+               autocapitalize="characters" spellcheck="false" placeholder="CONTRASEÑA">
+        <button class="btn" id="mb">ENTRAR</button>
+        <p class="err" id="merr"></p>
+      </div>
+    </div>`;
+
+  const go = ()=>{
+    const v = ($('#mp').value||'').trim().toUpperCase();
+    if (v === '1'){
+      state.stage = 1;
+      state.index = 0;
+      saveProgress();
+      renderPuzzle();
+    } else {
+      $('#merr').textContent = 'CONTRASEÑA INCORRECTA';
+      const inp = $('#mp');
+      inp.classList.add('shake');
+      setTimeout(()=>inp.classList.remove('shake'), 400);
+    }
+  };
+  $('#mb').onclick = go;
+  $('#mp').addEventListener('keydown', e=>{ if(e.key==='Enter') go(); });
+}
+
+/* =====================================================================
+   PANTALLA: FIN
+===================================================================== */
+function renderEnd(){
+  clear();
+  app.innerHTML = `
+    <div class="screen center">
+      <div class="brand">
+        <div class="suits"><span>♠</span><span class="red">♥</span><span class="red">♦</span><span>♣</span></div>
+        <h1>FIN DEL<br>JUEGO</h1>
+        <p class="sub">JUGADOR #${state.player}</p>
+      </div>
+      <div class="card">
+        <p class="hint" style="text-align:center">Has completado todos los acertijos de ambas etapas.</p>
+        <button class="btn" id="again">VOLVER AL INICIO</button>
+      </div>
+    </div>`;
+
+  $('#again').onclick = ()=>{
+    try{ localStorage.removeItem('rey_'+state.player); }catch(e){}
+    state.player = null; state.stage = 0; state.index = 0;
+    renderLogin();
+  };
+}
+
+/* =====================================================================
+   ARRANQUE
+===================================================================== */
+renderLogin();
+</script>
+</body>
+</html>
